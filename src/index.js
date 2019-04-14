@@ -7,21 +7,22 @@ function randomNumber(limit) {
     if (limit < 0) throw new Error('limit must be greater than 0');
     if (limit >= 1000000) throw new Error('limit must be less than 1,000,000');
 
-    let binaryStr = '';
-    let currentLimit = 1;
+    let number = 0;
+    const digits = Math.ceil(Math.log2(limit));
 
-    do {
-        binaryStr += flip() ? '1' : '0';
-        currentLimit = currentLimit << 1;
-    } while (limit >= currentLimit);
+    for (let i = 0; i < digits; i++) {
+        number = number << 1;
+        number += flip() ? 1 : 0;
+    }
 
-    const number = parseInt(binaryStr, 2);
+    if (number >= limit) {
+        number ^= digits ** 2;
+    }
 
-    return number < limit ? number : parseInt(binaryStr.substr(1) || '0', 2);
+    return number;
 }
 
 console.log(500, randomNumber(500));
 console.log(1, randomNumber(1));
 console.log(500, randomNumber(500));
-console.log(1000001, randomNumber(1000001));
-
+console.log(1000001, randomNumber(1000001)); // throw error
